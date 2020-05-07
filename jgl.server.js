@@ -6,26 +6,35 @@
 // socket.io
 
 // Requirements
-const app = require('express')();
-const http = require('http').Server(app);
-// var https = require('https')
-const io = require('socket.io')(http);
-const jsonfile = require('jsonfile');
-// var api = require('mturk-api');
-const mkdirp = require('mkdirp');
+var app = require('express')();
+var http = require('http').Server(app);
+var jsonfile = require('jsonfile');
+var api = require('mturk-api');
+var mkdirp = require('mkdirp');
+var fs = require('fs');
 
+const options = {
+    key: fs.readFileSync("/private/etc/apache2/gru.key"),
+    cert: fs.readFileSync("/private/etc/apache2/gru_stanford_edu_cert.cer")
+};
+
+var https = require('https').Server(options, app);
+var io = require('socket.io')(https);
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////// SECURITY FUNCTIONS ////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 
-const helmet = require('helmet')
+var helmet = require('helmet')
 app.use(helmet())
-
+app.use(helmet.frameguard({
+      action: 'allow-from',
+      domain: 'https://workersandbox.mturk.com'
+}));
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////// APP FUNCTIONALITY FUNCTIONS ////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
-
-// GET function
+//
+//// GET function
 app.get( '/*' , function( req, res ) {
     // this is the current file they have requested
     var file = req.params[0]; 
@@ -317,11 +326,10 @@ function viewerInfo(id) {
 
 // }
 
-
-const PORT = process.env.PORT || 8080;
-// var server = http.createServer(certOptions, app).listen(port);
-
-http.listen(PORT, function(){
-  console.log('Server live on *: ' + PORT);
+var port = 8080;
+//var port = 4043;
+//var port = 8043;
+https.listen(port, function(){
+  console.log('Server live on *: ' + port);
   // loadMTurkAPI();
 });

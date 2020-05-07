@@ -4,16 +4,27 @@
   "description": "Javascript graphics library",
   "main": "jgl.server.js",
   "dependencies": {
-    "express": "^4.17.1",
+    "debug": "^4.1.1",
+    "ejs": "^3.0.1",
+    "express": "^4.16.3",
     "helmet": "^3.21.2",
-    "jsonfile": "^5.0.0",
+    "jsonfile": "^2.4.0",
+    "lodash": "^4.17.15",
+    "mathjs": "^5.1.0",
     "mkdirp": "^0.5.1",
-    "socket.io": "^2.3.0"
+    "mturk-api": "^3.0.2",
+    "socket.io": "^2.1.1"
+  },
+  "engines": {
+    "node": "12.13.1",
+    "npm": "6.12.1"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "docs:build": "documentation build assets/js/** -f html -o docs"
+    "docs:build": "documentation build assets/js/** -f html -o docs",
+    "start": "node jgl.server.js",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
