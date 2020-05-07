@@ -284,7 +284,7 @@ function jglCreateTextureFromArray(array) {
  * @param {Number} ypos the y-coordinate to place the center of the texture.
  * @param {Number} rotation the rotation of the texture in radians (use math.PI).
  */
-function jglBltTexture(texture, xpos=0, ypos=0, rotation=0) {
+function jglBltTexture(texture, xpos=0, ypos=0, rotation=0, scale=1) {
 	let sprite = new PIXI.Sprite.from(texture);
 
 	if (jgl.usingVisualAngles) {
@@ -295,6 +295,8 @@ function jglBltTexture(texture, xpos=0, ypos=0, rotation=0) {
 	sprite.y = ypos;
 	sprite.anchor.set(0.5,0.5);
 	sprite.rotation = rotation;
+  sprite.scale.x = scale;
+  sprite.scale.y = scale;
 
 	jgl.pixi.graphicsContainer.addChild(sprite);
 	return sprite;
