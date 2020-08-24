@@ -227,6 +227,41 @@ function jglFillRect(x, y, size, color = 0xFFFFFF) {
 	return g;
 }
 
+/**
+ * Makes Unfilled Rectangles
+ * @param {Array} x an array of x coordinates of the centers
+ * @param {Array} y an array of y coordinates of the centers
+ * @param {Array} size [width,height] array
+ * @param {String} color color in binary format 0x000000
+ */
+function jglUnfilledRect(x, y, size, color = 0xFFFFFF) {
+	if (typeof x == 'number') {
+		x = [x]; y = [y];
+	}
+	if (x.length != y.length || size.length != 2) {
+		//Error
+		throw "Unfilled Rect: Lengths dont match"
+	}
+	// convert
+	if (jgl.pixi.usingVisualAngles) {
+		x = multiply(x,jgl.screenInfo.pixPerDeg);
+		y = multiply(y,jgl.screenInfo.pixPerDeg);
+		size = multiply(size,jgl.screenInfo.pixPerDeg);
+	}
+	// draw
+	let g = new PIXI.Graphics();
+	jgl.pixi.graphicsContainer.addChild(g);
+
+  g.lineStyle(5, color, 1);
+	for (var i=0;i<x.length;i++) {
+
+		g.drawRect(x[i]-(size[0]/2),y[i]-(size[1]/2),size[0],size[1]);
+
+	}
+  console.log('unfilled rect!!!');
+
+	return g;
+}
 //-------------------Drawing Images-------------------
 
 // Some notes on Pixi drawing. To render things *really* fast in Pixi you need to build RenderTexture
@@ -264,6 +299,11 @@ function jglCreateTexture(file) {
 	return tex;
 }
 
+function jglCreateTextureNoPixi(file) {
+  let tex = PIXI.Texture.fromImage(file);
+  return tex;
+}
+
 /**
  * Function for generating jgl textures.
  * @param {array} Array to draw texture using.
@@ -287,7 +327,7 @@ function jglCreateTextureFromArray(array) {
 function jglBltTexture(texture, xpos=0, ypos=0, rotation=0, scale=1) {
 	let sprite = new PIXI.Sprite.from(texture);
 
-	if (jgl.usingVisualAngles) {
+	if (jgl.pixi.usingVisualAngles) {
 		xpos = xpos * jgl.screenInfo.pixPerDeg;
 		ypos = ypos * jgl.screenInfo.pixPerDeg;
 	}

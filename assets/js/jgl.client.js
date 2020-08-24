@@ -115,10 +115,10 @@ var jgl = {}; // stuff that gets tracked (worker id, etc)
 function launch() {
 	jgl.screenInfo = screenInfo();
 
-	var fList = [initJGL,getExperiment,loadTemplate,getAmazonInfo,loadExperiment,loadTask_,preload,updateFromServer,function() {if (debug) {start();}}];
+	var fList = [initJGL,getExperiment,loadExperiment,loadTemplate,getAmazonInfo,loadTask_,preload,updateFromServer,function() {if (debug) {start();}}];
 	
 	for (var fi=0;fi<fList.length;fi++) {
-		setTimeout(fList[fi],fi*200);
+		setTimeout(fList[fi],fi*500);
 	}
 }
 
@@ -440,6 +440,12 @@ function processTask(task) {
 }
 
 function loadTask_() {
+  if(typeof(loadTask) == 'function'){
+    console.log('load task found');
+  } else{
+    console.log('load task not found :(');
+    //loadExperiment();
+  }
 	// Run the user defined function
 	jgl.task = loadTask();
 	// Take the task and process it
@@ -891,5 +897,10 @@ function endOngoingActivity() {
 
 function updateSeglen(nLength,segment) {
 	jgl.trial.seglen[segment] = nLength;
-	jgl.trial.length = sum(jgl.trial.seglen);
+  var sum = jgl.trial.seglen.reduce(function(a, b){
+              return a + b;
+            }, 0);
+  jgl.trial.length = sum;
 }
+
+
